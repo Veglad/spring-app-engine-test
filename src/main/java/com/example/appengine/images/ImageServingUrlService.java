@@ -20,28 +20,22 @@ import com.google.appengine.api.images.ImagesService;
 import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.ServingUrlOptions;
 
-import javax.inject.Inject;
-import javax.servlet.annotation.WebServlet;
+import javax.annotation.ManagedBean;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(name = "image", urlPatterns = "/image/serving-url")
-public class ImagesServlet extends HttpServlet {
+@ManagedBean
+public class ImageServingUrlService {
 
-    @Inject
-    private ImageServingUrlService imagesService;
+    private final ImagesService imagesService = ImagesServiceFactory.getImagesService();
 
-    @Override
-    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String bucket = req.getParameter("bucket");
-        String image = req.getParameter("image");
-
-        String url = imagesService.getServingUrl(bucket, image);
-
-        PrintWriter out = resp.getWriter();
-        out.print(url);
+    public String getServingUrl(String bucket, String imageUrl) {
+        ServingUrlOptions options = ServingUrlOptions.Builder
+                .withGoogleStorageFileName("/gs/" + bucket + "/" + imageUrl)
+                .secureUrl(true);
+        return imagesService.getServingUrl(options);
     }
 }
