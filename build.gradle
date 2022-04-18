@@ -16,7 +16,7 @@ repositories {   // repositories for Jar's you access in your code
 
 apply plugin: 'java'
 apply plugin: 'war'
-apply plugin: 'org.akhikhl.gretty'
+//apply plugin: 'org.akhikhl.gretty'
 apply plugin: 'com.google.cloud.tools.appengine'
 
 //plugins {
@@ -43,9 +43,9 @@ dependencies {
     providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
 }
 
-gretty {
-    servletContainer = 'jetty9'  // What App Engine Flexible uses
-}
+//gretty {
+//    servletContainer = 'jetty9'  // What App Engine Flexible uses
+//}
 
 appengine {  // App Engine tasks configuration
     deploy {   // deploy configuration
