@@ -1,22 +1,18 @@
-buildscript {      // Configuration for building
+buildscript {
     repositories {
-        jcenter()      // Bintray's repository - a fast Maven Central mirror & more
         mavenCentral()
     }
     dependencies {
         classpath 'com.google.cloud.tools:appengine-gradle-plugin:2.4.2'
-        classpath 'org.akhikhl.gretty:gretty:+'
     }
 }
 
-repositories {   // repositories for Jar's you access in your code
-    jcenter()
+repositories {
     mavenCentral()
 }
 
 apply plugin: 'java'
 apply plugin: 'war'
-apply plugin: 'org.akhikhl.gretty'
 apply plugin: 'com.google.cloud.tools.appengine'
 
 dependencies {
@@ -25,12 +21,8 @@ dependencies {
     implementation "com.google.appengine:appengine-api-1.0-sdk:2.0.4"
 }
 
-gretty {
-    servletContainer = 'jetty9'  // What App Engine Flexible uses
-}
-
 appengine {
-    deploy {   // deploy configuration
+    deploy {
         stopPreviousVersion = true  // default - stop the current version
         promote = true              // default - & make this the current version
         projectId = 'GCLOUD_CONFIG' // delegate to project in gcloud config
@@ -38,8 +30,8 @@ appengine {
     }
 }
 
-group = 'com.example.appengine'   // Generated output GroupId
-version = '1.0-SNAPSHOT'          // Version in generated output
+group = 'com.example.appengine'
+version = '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
