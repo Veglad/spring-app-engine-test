@@ -31,7 +31,7 @@ import java.io.PrintWriter;
 @SuppressWarnings("serial")
 @WebServlet(
         name = "images",
-        urlPatterns = "/images")
+        urlPatterns = "/image/servingUrl")
 public class ImagesServlet extends HttpServlet {
 
     @Override
