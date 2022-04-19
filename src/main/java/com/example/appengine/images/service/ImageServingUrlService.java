@@ -14,18 +14,14 @@
  * limitations under the License.
  */
 
-package com.example.appengine.images;
+package com.example.appengine.images.service;
 
 import com.google.appengine.api.images.ImagesService;
 import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.ServingUrlOptions;
 
 import javax.annotation.ManagedBean;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
+
 
 @ManagedBean
 public class ImageServingUrlService {
@@ -33,9 +29,24 @@ public class ImageServingUrlService {
     private final ImagesService imagesService = ImagesServiceFactory.getImagesService();
 
     public String getServingUrl(String bucket, String imageUrl) {
+        verifyNotBlank(bucket, "bucket");
+        verifyNotBlank(imageUrl, "imageUrl");
+
         ServingUrlOptions options = ServingUrlOptions.Builder
                 .withGoogleStorageFileName("/gs/" + bucket + "/" + imageUrl)
                 .secureUrl(true);
-        return imagesService.getServingUrl(options);
+//        return imagesService.getServingUrl(options);
+
+        throw new RuntimeException("Any error");
+    }
+
+    private void verifyNotBlank(String value, String fieldErrorName) {
+        if (value == null) {
+            throw new IllegalArgumentException(fieldErrorName + " must be not null");
+        }
+
+        if (value.isEmpty()) {
+            throw new IllegalArgumentException(fieldErrorName + " must be not blank");
+        }
     }
 }

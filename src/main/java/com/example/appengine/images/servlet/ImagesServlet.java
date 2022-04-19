@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-package com.example.appengine.images;
+package com.example.appengine.images.servlet;
 
-import com.google.appengine.api.images.ImagesService;
-import com.google.appengine.api.images.ImagesServiceFactory;
-import com.google.appengine.api.images.ServingUrlOptions;
+import com.example.appengine.images.service.ImageServingUrlService;
 
 import javax.inject.Inject;
 import javax.servlet.annotation.WebServlet;
@@ -28,11 +26,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(name = "image", urlPatterns = "/image/serving-url")
+
+@WebServlet(name = "imageServingUrl", urlPatterns = "/image/serving-url")
 public class ImagesServlet extends HttpServlet {
 
     @Inject
-    private ImageServingUrlService imagesService;
+    ImageServingUrlService imagesService = new ImageServingUrlService();
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -43,5 +42,6 @@ public class ImagesServlet extends HttpServlet {
 
         PrintWriter out = resp.getWriter();
         out.print(url);
+        out.close();
     }
 }
