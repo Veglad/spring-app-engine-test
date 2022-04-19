@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package com.example.appengine.images;
+package com.example.appengine.images.servlet;
 
-import com.google.appengine.api.images.ImagesService;
-import com.google.appengine.api.images.ImagesServiceFactory;
-import com.google.appengine.api.images.ServingUrlOptions;
+import com.example.appengine.images.service.ImageServingUrlService;
 
+import javax.inject.Inject;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -27,29 +26,21 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-// [START example]
-@SuppressWarnings("serial")
-@WebServlet(
-        name = "images",
-        urlPatterns = "/image/servingUrl")
+@WebServlet(name = "imageServingUrl", urlPatterns = "/image/serving-url")
 public class ImagesServlet extends HttpServlet {
+
+    @Inject
+    ImageServingUrlService imagesService = new ImageServingUrlService();
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String bucket = req.getParameter("bucket");
         String image = req.getParameter("image");
-        ImagesService imagesService = ImagesServiceFactory.getImagesService();
-        ServingUrlOptions options =
-                ServingUrlOptions.Builder.withGoogleStorageFileName("/gs/" + bucket + "/" + image)
-                        .imageSize(150)
-                        .crop(true)
-                        .secureUrl(true);
-        String url = imagesService.getServingUrl(options);
+
+        String url = imagesService.getServingUrl(bucket, image);
 
         PrintWriter out = resp.getWriter();
-        out.println("<html><body>\n");
-        out.println(
-                "<img src='" + url + "'/>");
-        out.println("</body></html>\n");
+        out.print(url);
+        out.close();
     }
 }

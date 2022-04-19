@@ -1,6 +1,5 @@
 buildscript {
     repositories {
-        jcenter()
         mavenCentral()
     }
     dependencies {
@@ -9,8 +8,7 @@ buildscript {
     }
 }
 
-repositories {   // repositories for Jar's you access in your code
-    jcenter()
+repositories {
     mavenCentral()
 }
 
@@ -19,37 +17,38 @@ apply plugin: 'war'
 apply plugin: 'org.akhikhl.gretty'
 apply plugin: 'com.google.cloud.tools.appengine'
 
-//plugins {
-//    id 'java'
-//}
-
-group = 'com.example'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '8'
-
-apply plugin: 'com.google.cloud.tools.appengine'
-
-repositories {
-    mavenCentral()
+ext {
+    lombokVersion = '1.18.20'
 }
 
 dependencies {
-    implementation "com.google.appengine:appengine-api-1.0-sdk:2.0.4"
-    implementation 'com.google.appengine.tools:appengine-gcs-client:0.8.3'
-
-//    compileOnly 'javax.servlet:javax.servlet-api:3.1.0'
-
-    providedCompile 'com.google.appengine:appengine:+'
     providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
+    providedCompile 'com.google.appengine:appengine:+'
+    implementation "com.google.appengine:appengine-api-1.0-sdk:2.0.4"
+
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: "${lombokVersion}"
+    testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
+    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+    testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+
+    implementation 'javax:javaee-api:7.0'
 }
 
 gretty {
     servletContainer = 'jetty9'  // What App Engine Flexible uses
 }
 
-appengine {  // App Engine tasks configuration
-    deploy {   // deploy configuration
+appengine {
+    deploy {
+        stopPreviousVersion = true  // default - stop the current version
+        promote = true              // default - & make this the current version
         projectId = 'GCLOUD_CONFIG' // delegate to project in gcloud config
         version = 'GCLOUD_CONFIG'   // delegate to gcloud to generate a version
     }
 }
+
+group = 'com.example.appengine'
+version = '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
